@@ -26,11 +26,9 @@
 {
 //	NSNumber *vMul = [NSNumber numberWithInt:CDOptionsMultipleValues];
 //	NSNumber *vOne = [NSNumber numberWithInt:CDOptionsOneValue];
-	NSNumber *vNone = [NSNumber numberWithInt:CDOptionsNoValues];
+	NSNumber *vNone = @CDOptionsNoValues;
 
-	return [NSDictionary dictionaryWithObjectsAndKeys:
-		vNone, @"no-create-directories",
-		nil];
+	return @{@"no-create-directories": vNone};
 }
 
 - (void) createControl {
@@ -87,20 +85,17 @@
     [self setTimeout];
 	
     NSInteger result;
-    if (kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber10_6) {
-        result = [savePanel runModalForDirectory:dir file:file];
-    }
-    else {
+    
         if (dir != nil) {
             NSURL * url = [[[NSURL alloc] initFileURLWithPath:dir] autorelease];
             [savePanel setDirectoryURL:url];
         }
         [savePanel setNameFieldStringValue:file];
         result = [savePanel runModal];
-    }
+    
     if (result == NSFileHandlingPanelOKButton) {
         controlExitStatus = -1;
-        [controlReturnValues addObject:[savePanel filename]];
+        [controlReturnValues addObject:[NSString stringWithContentsOfURL:[savePanel URL] encoding:NSUTF8StringEncoding error:nil]];
     }
     else {
         controlExitStatus = -2;

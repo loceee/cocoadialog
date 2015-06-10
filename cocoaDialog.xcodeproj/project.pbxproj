@@ -696,6 +696,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A78A8C9614375704007AE363 /* ConfigDebug.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -757,6 +758,7 @@
 				GENERATE_PROFILING_CODE = YES;
 				HEADER_SEARCH_PATHS = "";
 				LD_GENERATE_MAP_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
@@ -796,6 +798,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				HEADER_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 			};
 			name = Release;
 		};
@@ -803,6 +806,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A78A8C9714375704007AE363 /* ConfigRelease.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -819,6 +823,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A78A8C9614375704007AE363 /* ConfigDebug.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				OTHER_CFLAGS = "-DDEBUG";
 				PRODUCT_NAME = relaunch;
 				SDKROOT = macosx;
@@ -829,6 +834,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A78A8C9714375704007AE363 /* ConfigRelease.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				PRODUCT_NAME = relaunch;
 				SDKROOT = macosx;
 			};

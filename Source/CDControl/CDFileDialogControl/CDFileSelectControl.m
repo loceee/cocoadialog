@@ -24,18 +24,16 @@
 
 - (NSDictionary *) availableKeys
 {
-	NSNumber *vMul = [NSNumber numberWithInt:CDOptionsMultipleValues];
+	NSNumber *vMul = @CDOptionsMultipleValues;
 //	NSNumber *vOne = [NSNumber numberWithInt:CDOptionsOneValue];
-	NSNumber *vNone = [NSNumber numberWithInt:CDOptionsNoValues];
+	NSNumber *vNone = @CDOptionsNoValues;
 
-	return [NSDictionary dictionaryWithObjectsAndKeys:
-        vMul,  @"allowed-files",
-		vNone, @"select-directories",
-		vNone, @"select-only-directories",
-		vNone, @"no-select-directories",
-		vNone, @"select-multiple",
-		vNone, @"no-select-multiple",
-		nil];
+	return @{@"allowed-files": vMul,
+		@"select-directories": vNone,
+		@"select-only-directories": vNone,
+		@"no-select-directories": vNone,
+		@"select-multiple": vNone,
+		@"no-select-multiple": vNone};
 }
 
 - (void) createControl {
@@ -92,7 +90,7 @@
         if (file != nil) {
             NSString *path = dir;
             if (path == nil) {
-                path = [openPanel directory];
+                path = [NSString stringWithContentsOfURL:[openPanel URL] encoding:NSUTF8StringEncoding error:nil];
             }
             path = [path stringByAppendingString:@"/"];
             path = [path stringByAppendingString:file];
@@ -116,10 +114,6 @@
 
     NSInteger result;
 
-    if (kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber10_6) {
-        result = [openPanel runModalForDirectory:dir file:file];
-    }
-    else {
         if (dir != nil) {
             if (file != nil) {
                 dir = [dir stringByAppendingString:@"/"];
@@ -129,7 +123,7 @@
             [openPanel setDirectoryURL:url];
         }
         result = [openPanel runModal];
-    }
+    
     if (result == NSFileHandlingPanelOKButton) {
         controlExitStatus = -1;
         NSEnumerator *en = [[openPanel URLs] objectEnumerator];
