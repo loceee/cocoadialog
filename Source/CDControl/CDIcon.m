@@ -19,23 +19,19 @@
 
 - (instancetype) initWithOptions:(CDOptions *)opts {
     self = [super initWithOptions:opts];
-    controls = [[[NSMutableArray alloc] init] retain];
+    controls = [[NSMutableArray alloc] init];
     return self;
 }
 
-- (void) dealloc {
-    [control release];
-    [super dealloc];
-}
 
 - (void) addControl:(id)obj {
-    if (obj != nil) {
+    if (obj) {
         [controls addObject:obj];
     }
 }
 
 - (NSArray *)controls {
-    return [[controls copy] autorelease];
+    return [controls copy];
 }
 
 - (NSImage *)icon {
@@ -51,7 +47,7 @@
     return [[self icon] TIFFRepresentation];
 }
 - (NSImage *)iconWithDefault {
-    if ([self icon] == nil) {
+    if (![self icon]) {
         iconImage = [NSApp applicationIconImage];
     }
     return iconImage;
@@ -63,14 +59,14 @@
 
 - (NSImage *)iconFromFile:(NSString *)file {
     NSImage *image = nil;
-    image = [[[NSImage alloc] initWithContentsOfFile:file] autorelease];
-    if (image == nil && [options hasOpt:@"debug"]) {
+    image = [[NSImage alloc] initWithContentsOfFile:file];
+    if (!image && [options hasOpt:@"debug"]) {
         [self debug:[NSString stringWithFormat:@"Could not return icon from specified file: \"%@\".", file]];
     }
     return image;
 }
 - (NSImage *)iconFromName:(NSString *)name {
-    NSImage *image = [[[NSImage alloc] initWithData:nil] autorelease];
+    NSImage *image = [[NSImage alloc] initWithData:nil];
     NSString *bundle = nil;
     NSString *path = nil;
     NSString *iconType = @"icns";
@@ -82,7 +78,7 @@
         bundle = [options optValue:@"icon-bundle"];
     }
     // Set default bundle identifier
-    if (bundle == nil) {
+    if (!bundle) {
         // Application icon
         if ([name caseInsensitiveCompare:@"cocoadialog"] == NSOrderedSame) {
             image = [NSApp applicationIconImage];
@@ -320,19 +316,19 @@
         }
     }
     // Process bundle image path only if image has not already been set from above
-    if (image == nil) {
-        if (bundle != nil || path != nil) {
+    if (!image) {
+        if (bundle || path ) {
             NSString * fileName = nil;
-            if (path == nil) {
+            if (!path) {
                 NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
                 fileName = [[NSBundle bundleWithPath:[workspace absolutePathForAppBundleWithIdentifier:bundle]] pathForResource:name ofType:iconType];
             }
             else {
                 fileName = [[NSBundle bundleWithPath:path] pathForResource:name ofType:iconType];
             }
-            if (fileName != nil) {
-                image = [[[NSImage alloc] initWithContentsOfFile:fileName] autorelease];
-                if (image == nil && [options hasOpt:@"debug"]) {
+            if (fileName) {
+                image = [[NSImage alloc] initWithContentsOfFile:fileName];
+                if (!image && [options hasOpt:@"debug"]) {
                     [self debug:[NSString stringWithFormat:@"Could not get image from specified icon file '%@'.", fileName]];
                 }
             }
@@ -350,7 +346,7 @@
 }
 
 - (void) setIconFromOptions {
-    if (control != nil) {
+    if (control) {
         NSImage *image = [self icon];
         if ([options hasOpt:@"icon-file"]) {
             image = [self iconFromFile:[options optValue:@"icon-file"]];
@@ -365,7 +361,7 @@
         NSSize resize = NSMakeSize(iconWidth, iconHeight);
 
         // Control should display icon, process image.
-        if (image != nil) {
+        if (image) {
             // Set default icon height
             // Get icon sizes from user options
             if ([options hasOpt:@"icon-size"]) {
@@ -397,11 +393,11 @@
     }
 }
 - (void) setIconWithImage:(NSImage *)anImage withSize:(NSSize)aSize {
-    if (anImage != nil) {
+    if (anImage) {
         NSSize originalSize = [anImage size];
         // Resize Icon
         if (originalSize.width != aSize.width || originalSize.height != aSize.height) {
-            NSImage *resizedImage = [[[NSImage alloc] initWithSize: aSize] autorelease];
+            NSImage *resizedImage = [[NSImage alloc] initWithSize: aSize];
             [resizedImage lockFocus];
             [anImage drawInRect: NSMakeRect(0, 0, aSize.width, aSize.height) fromRect: NSMakeRect(0, 0, originalSize.width, originalSize.height) operation: NSCompositeSourceOver fraction: 1.0];
             [resizedImage unlockFocus];
@@ -426,7 +422,7 @@
 }
 - (void) setIconWithImage:(NSImage *)anImage withSize:(NSSize)aSize withControls:(NSArray *)anArray {
     // Icon has image
-    if (anImage != nil) {
+    if (anImage) {
         // Set current icon frame
         NSRect iconFrame = [control frame];
 
@@ -438,7 +434,7 @@
         id _control;
         while ((_control = [en nextObject])) {
             // Make sure the control exists
-            if (_control != nil) {
+            if (_control) {
                 NSRect controlFrame = [_control frame];
                 NSRect newControlFrame = NSMakeRect(controlFrame.origin.x + iconWidthDiff, controlFrame.origin.y, controlFrame.size.width - iconWidthDiff, controlFrame.size.height);
                 [_control setFrame:newControlFrame];
@@ -458,7 +454,7 @@
         id _control;
         while ((_control = [en nextObject])) {
             // Make sure the control exists
-            if (_control != nil) {
+            if (_control) {
                 NSRect controlFrame = [_control frame];
                 float newControlWidth = controlFrame.size.width + (controlFrame.origin.x - iconFrame.origin.x);
                 NSRect newControlFrame = NSMakeRect(iconFrame.origin.x, controlFrame.origin.y, newControlWidth, controlFrame.size.height);

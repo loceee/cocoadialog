@@ -49,8 +49,8 @@
 
 // Should be called after setButtons, and before resize
 - (void) setLabel:(NSString *)labelText {
-    if (expandingLabel != nil) {
-        if (labelText == nil) {
+    if (expandingLabel) {
+        if (!labelText) {
             labelText = @"";
         }
         float labelNewHeight = -10.0f;
@@ -58,9 +58,9 @@
         float labelHeightDiff = labelNewHeight - labelRect.size.height;
         if (![labelText isEqualToString:@""]) {
             [expandingLabel setStringValue:labelText];
-            NSTextStorage *textStorage = [[[NSTextStorage alloc] initWithString: labelText]autorelease];
-            NSTextContainer *textContainer = [[[NSTextContainer alloc] initWithContainerSize:NSMakeSize(labelRect.size.width, FLT_MAX)] autorelease];
-            NSLayoutManager *layoutManager = [[[NSLayoutManager alloc]init] autorelease];
+            NSTextStorage *textStorage = [[NSTextStorage alloc] initWithString: labelText];
+            NSTextContainer *textContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(labelRect.size.width, FLT_MAX)];
+            NSLayoutManager *layoutManager = [[NSLayoutManager alloc]init];
             [layoutManager addTextContainer: textContainer];
             [textStorage addLayoutManager: layoutManager];
             [layoutManager glyphRangeForTextContainer:textContainer];
@@ -126,11 +126,10 @@
 			[options optValue:@"text"]];
 		[[textView textStorage] setAttributedString:text];
 		[textView scrollRangeToVisible:NSMakeRange([text length], 0)];
-		[text release];
 	} else if ([options hasOpt:@"text-from-file"]) {
 		NSString *contents = [NSString stringWithContentsOfFile:
 			[options optValue:@"text-from-file"] encoding:NSUTF8StringEncoding error:nil];
-		if (contents == nil) {
+		if (!contents) {
 			if ([options hasOpt:@"debug"]) {
 				[self debug:@"Could not read file"];
 			}
@@ -139,9 +138,8 @@
 			text = [[NSAttributedString alloc] initWithString:contents];
 		}
 		[[textView textStorage] setAttributedString:text];
-		[text release];
 	} else {
-		[[textView textStorage] setAttributedString:[[[NSAttributedString alloc] initWithString:@""] autorelease]];
+		[[textView textStorage] setAttributedString:[[NSAttributedString alloc] initWithString:@""]];
 	}
     
 	[self setTitleButtonsLabel:[options optValue:@"label"]];

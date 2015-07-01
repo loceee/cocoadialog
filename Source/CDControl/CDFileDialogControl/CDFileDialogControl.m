@@ -24,14 +24,10 @@
 
 - (instancetype)init {
     self = [self initWithOptions:nil];
-    extensions = [[[NSMutableArray alloc] init] retain];
+    extensions = [[NSMutableArray alloc] init];
     return self;
 }
 
-- (void) dealloc {
-    [extensions release];
-	[super dealloc];
-}
 
 // This must be overridden if you want local global options for your control
 - (NSDictionary *) globalAvailableKeys {
@@ -78,9 +74,9 @@
 // Set options common to any file save panel
 - (void) setMisc {
     [savePanel setDelegate:self];
-    extensions = [[[NSMutableArray alloc] init] retain];
+    extensions = [[NSMutableArray alloc] init];
     NSArray *optionExtensions = [options optValues:@"with-extensions"];
-	if (optionExtensions != nil && [optionExtensions count]) {
+	if (optionExtensions && [optionExtensions count]) {
 		NSString *extension;
 		NSEnumerator *en = [optionExtensions objectEnumerator];
 		while ((extension = [en nextObject])) {
@@ -96,17 +92,17 @@
 	}
 
 	// Set title
-	if ([options optValue:@"title"] != nil) {
+	if ([options optValue:@"title"]) {
 		[savePanel setTitle:[options optValue:@"title"]];
 	}
 	// set message displayed on file select panel
-	if ([options optValue:@"label"] != nil) {
+	if ([options optValue:@"label"]) {
 		[savePanel setMessage:[options optValue:@"label"]];
 	}
 }
 
 - (BOOL)isExtensionAllowed:(NSString *)filename {
-    if (extensions != nil && [extensions count]) {
+    if (extensions && [extensions count]) {
         NSString* extension = [filename pathExtension];
         return [extensions containsObject:extension];
     }

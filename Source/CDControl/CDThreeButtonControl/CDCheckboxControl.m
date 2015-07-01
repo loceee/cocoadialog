@@ -22,12 +22,13 @@
             @"disabled": vMul};
 }
 - (BOOL)isReturnValueEmpty {
-    if ([checkboxes count] > 0) {
-        NSEnumerator *en = [checkboxes objectEnumerator];
+    if ([checkboxes count] > 0)
+    {
         BOOL hasChecked = NO;
-        id obj;
-        while ((obj = [en nextObject])) {
-            if ([obj state] == NSOnState){
+        for (NSButtonCell *cell in checkboxes)
+        {
+            if ([cell state] == NSOnState)
+            {
                 hasChecked = YES;
                 break;
             }
@@ -78,7 +79,7 @@
 
 	// set return values
     NSArray * cells = [controlMatrix cells];
-    NSMutableArray *tmpValues = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray *tmpValues = [[NSMutableArray alloc] init];
     NSEnumerator *en = [cells objectEnumerator];
     id obj;
     while ((obj = [en nextObject])) {
@@ -86,7 +87,7 @@
             [tmpValues addObject:obj];
         }
     }
-    checkboxes = [[NSMutableArray arrayWithArray:tmpValues] autorelease];
+    checkboxes = [NSMutableArray arrayWithArray:tmpValues];
     en = [tmpValues objectEnumerator];
     while (obj == [en nextObject]) {
         checkboxes[[obj tag]] = obj;
@@ -94,26 +95,33 @@
 }
 
 - (void) controlHasFinished:(int)button {
-    NSMutableArray *checkboxesArray = [[[NSMutableArray alloc] init] autorelease];
-    NSEnumerator *en = [checkboxes objectEnumerator];
-    id obj;
+    NSMutableArray *checkboxesArray = [[NSMutableArray alloc] init];
 	if ([[self options] hasOpt:@"string-output"]) {
-        if (checkboxes != nil && [checkboxes count]) {
+        if (checkboxes && [checkboxes count]) {
             unsigned long state;
-            while ((obj = [en nextObject])) {
-                state = [obj state];
-                switch (state) {
-                    case NSOffState: [checkboxesArray addObject: @"off"]; break;
-                    case NSOnState: [checkboxesArray addObject: @"on"]; break;
-                    case NSMixedState: [checkboxesArray addObject: @"mixed"]; break;
+            for (NSButtonCell *cell in checkboxes)
+            {
+                state = [cell state];
+                switch (state)
+                {
+                    case NSOffState: [checkboxesArray addObject: @"off"];
+                        break;
+                    case NSOnState: [checkboxesArray addObject: @"on"];
+                        break;
+                    case NSMixedState: [checkboxesArray addObject: @"mixed"];
+                        break;
                 }
             }
             [controlReturnValues addObject:[checkboxesArray componentsJoinedByString:@" "]];
         }
-	} else {
-        if (checkboxes != nil && [checkboxes count]) {
-            while ((obj = [en nextObject])) {
-                [checkboxesArray addObject: [NSString stringWithFormat:@"%li", (long)[obj state]]];
+	}
+    else
+    {
+        if (checkboxes && [checkboxes count])
+        {
+            for (NSButtonCell *cell in checkboxes)
+            {
+                [checkboxesArray addObject: [NSString stringWithFormat:@"%li", (long)[cell state]]];
             }
             [controlReturnValues addObject:[checkboxesArray componentsJoinedByString:@" "]];
         }
@@ -125,9 +133,9 @@
 - (void) setControl:(id)sender {
     // Setup the control
     NSArray *items = [NSArray arrayWithArray:[options optValues:@"items"]];
-    NSArray *checked = [[[NSArray alloc] init] autorelease];
-    NSArray *mixed = [[[NSArray alloc] init] autorelease];
-    NSArray *disabled = [[[NSArray alloc] init] autorelease];
+    NSArray *checked = [[NSArray alloc] init];
+    NSArray *mixed = [[NSArray alloc] init];
+    NSArray *disabled = [[NSArray alloc] init];
 
     if ([options hasOpt:@"checked"]) {
         checked = [options optValues:@"checked"];
@@ -174,7 +182,7 @@
     rows = [controlMatrix numberOfRows];
     columns = [controlMatrix numberOfColumns];
 
-    NSMutableArray * controls = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray * controls = [[NSMutableArray alloc] init];
 
     // Create the control for each item
     unsigned long currItem = 0;
@@ -182,21 +190,21 @@
     float cellWidth = 0.0;
     id obj;
     while ((obj = [en nextObject])) {
-        NSButton * button = [[[NSButton alloc] init] autorelease];
+        NSButton * button = [[NSButton alloc] init];
         [button setButtonType:NSSwitchButton];
         [button setTitle:items[currItem]];
-        if (checked != nil && [checked count]) {
+        if (checked && [checked count]) {
             if ([checked containsObject:[NSString stringWithFormat:@"%lu", currItem]]) {
                 [[button cell] setState:NSOnState];
             }
         }
-        if (mixed != nil && [mixed count]) {
+        if (mixed && [mixed count]) {
             if ([mixed containsObject:[NSString stringWithFormat:@"%lu", currItem]]) {
                 [[button cell] setAllowsMixedState:YES];
                 [[button cell] setState:NSMixedState];
             }
         }
-        if (disabled != nil && [disabled count]) {
+        if (disabled && [disabled count]) {
             if ([disabled containsObject:[NSString stringWithFormat:@"%lu", currItem]]) {
                 [[button cell] setEnabled: NO];
             }
@@ -210,6 +218,11 @@
         currItem++;
     }
 
+    
+    
+    
+    
+    
     // Set other attributes of matrix
     [controlMatrix setAutosizesCells:NO];
     [controlMatrix setCellSize:NSMakeSize(cellWidth, 18.0f)];
@@ -225,7 +238,7 @@
                 currItem++;
             }
             else {
-                NSCell * blankCell = [[[NSCell alloc] init] autorelease];
+                NSCell * blankCell = [[NSCell alloc] init];
                 [blankCell setType:NSNullCellType];
                 [blankCell setEnabled:NO];
                 [controlMatrix putCell:blankCell atRow:currRow column:currColumn];

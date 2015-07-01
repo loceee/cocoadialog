@@ -49,7 +49,8 @@
 		return NO;
 	}
     // Load nib
-	if (![NSBundle loadNibNamed:@"tbc" owner:self]) {
+	if (![[NSBundle mainBundle] loadNibNamed:@"tbc" owner:self topLevelObjects:nil])
+    {
 		if ([options hasOpt:@"debug"]) {
 			[self debug:@"Could not load tbc.nib"];
 		}
@@ -62,9 +63,9 @@
 - (BOOL)isReturnValueEmpty
 {
     NSArray * items = [controlMatrix cells];
-    if (items != nil && [items count]) {
+    if (items && [items count]) {
         NSCell * selectedCell = [controlMatrix selectedCell];
-        if (selectedCell != nil) {
+        if (selectedCell) {
             return NO;
         }
         else {
@@ -94,7 +95,7 @@
     }
 
     NSString * labelText = @"";
-    if ([options hasOpt:@"label"] && [options optValue:@"label"] != nil) {
+    if ([options hasOpt:@"label"] && [options optValue:@"label"]) {
         labelText = [options optValue:@"label"];
     }
 	[self setTitleButtonsLabel:labelText];
@@ -102,9 +103,9 @@
 
 - (void) controlHasFinished:(int)button {
     NSArray * radioArray = [controlMatrix cells];
-    if (radioArray != nil && [radioArray count]) {
+    if (radioArray && [radioArray count]) {
         NSCell * selectedCell = [controlMatrix selectedCell];
-        if (selectedCell != nil) {
+        if (selectedCell) {
             if ([[self options] hasOpt:@"string-output"]) {
                 [controlReturnValues addObject:[selectedCell title]];
             }
@@ -126,7 +127,7 @@
     // Setup the control
     NSArray *items = [NSArray arrayWithArray:[options optValues:@"items"]];
     unsigned long selected = -1;
-    NSArray *disabled = [[[NSArray alloc] init] autorelease];
+    NSArray *disabled = [[NSArray alloc] init];
 
 
     if ([options hasOpt:@"selected"]) {
@@ -172,7 +173,7 @@
     rows = [controlMatrix numberOfRows];
     columns = [controlMatrix numberOfColumns];
 
-    NSMutableArray * controls = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray * controls = [[NSMutableArray alloc] init];
 
     // Create the control for each item
     unsigned long currItem = 0;
@@ -180,10 +181,10 @@
     float cellWidth = 0.0;
     id obj;
     while ((obj = [en nextObject])) {
-        NSButton * button = [[[NSButton alloc] init] autorelease];
+        NSButton * button = [[NSButton alloc] init];
         [button setButtonType:NSRadioButton];
         [button setTitle:items[currItem]];
-        if (disabled != nil && [disabled count]) {
+        if (disabled && [disabled count]) {
             if ([disabled containsObject:[NSString stringWithFormat:@"%lu", currItem]]) {
                 [[button cell] setEnabled: NO];
             }
@@ -217,7 +218,7 @@
                 currItem++;
             }
             else {
-                NSCell * blankCell = [[[NSCell alloc] init] autorelease];
+                NSCell * blankCell = [[NSCell alloc] init];
                 [blankCell setType:NSNullCellType];
                 [blankCell setEnabled:NO];
                 [controlMatrix putCell:blankCell atRow:currRow column:currColumn];

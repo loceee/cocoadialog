@@ -22,16 +22,12 @@
 	[panel setContentMinSize:panelMinSize];
 }
 
-- (void) dealloc {
-    [panel release];
-    [super dealloc];
-}
 
 - (NSSize) findNewSize {
 	NSSize size = NSZeroSize;
 	NSSize oldSize;
 	NSString *width, *height;
-	if (options == nil || panel == nil) {
+	if (!options || !panel) {
 		return size;
 	}
 	size = [[panel contentView] frame].size;
@@ -77,7 +73,7 @@
 	}
 }
 - (void) setFloat {
-    if (panel != nil) {
+    if (panel) {
         if ([options hasOpt:@"no-float"]) {
             [panel setFloatingPanel:NO];
             [panel setLevel:NSNormalWindowLevel];
@@ -95,10 +91,10 @@
     }
 }
 - (void) setPanelEmpty {
-    panel = [[[NSPanel alloc] initWithContentRect:NSMakeRect(0, 0, 0, 0)
+    panel = [[NSPanel alloc] initWithContentRect:NSMakeRect(0, 0, 0, 0)
                                                 styleMask:NSBorderlessWindowMask
                                                   backing:NSBackingStoreBuffered
-                                                    defer:NO] autorelease];
+                                                    defer:NO];
 }
 - (void) setPosition {
     NSRect screen = [[NSScreen mainScreen] visibleFrame];
@@ -160,7 +156,7 @@
 
 - (void)setTitle {
     // set title
-	if ([options optValue:@"title"] != nil) {
+	if ([options optValue:@"title"]) {
 		[panel setTitle:[options optValue:@"title"]];
 	}
     else {
@@ -169,7 +165,7 @@
 }
 
 - (void) setTitle:(NSString *)string {
-    if (string != nil && ![string isEqualToString:@""]) {
+    if (string && ![string isEqualToString:@""]) {
         [panel setTitle:string];
     }
     else {

@@ -71,25 +71,25 @@
 
 	// set starting file (to be used later with
 	// runModal...) - doesn't work.
-	if ([options optValue:@"with-file"] != nil) {
+	if ([options optValue:@"with-file"]) {
 		file = [options optValue:@"with-file"];
 	}
 	// set starting directory (to be used later with runModal...)
-	if ([options optValue:@"with-directory"] != nil) {
+	if ([options optValue:@"with-directory"]) {
 		dir = [options optValue:@"with-directory"];
 	}
 
     // Only check for dir or file path existance if debug is enabled.
     if ([options hasOpt:@"debug"]) {
-        NSFileManager *fm = [[[NSFileManager alloc] init] autorelease];
+        NSFileManager *fm = [[NSFileManager alloc] init];
         // Directory
-        if (dir != nil && ![fm fileExistsAtPath:dir]) {
+        if (dir && ![fm fileExistsAtPath:dir]) {
             [self debug:[NSString stringWithFormat:@"Option --with-directory specifies a directory that does not exist: %@", dir]];
         }
         // File
-        if (file != nil) {
+        if (file) {
             NSString *path = dir;
-            if (path == nil) {
+            if (!path) {
                 path = [NSString stringWithContentsOfURL:[openPanel URL] encoding:NSUTF8StringEncoding error:nil];
             }
             path = [path stringByAppendingString:@"/"];
@@ -114,12 +114,12 @@
 
     NSInteger result;
 
-        if (dir != nil) {
-            if (file != nil) {
+        if (dir) {
+            if (file) {
                 dir = [dir stringByAppendingString:@"/"];
                 dir = [dir stringByAppendingString:file];
             }
-            NSURL * url = [[[NSURL alloc] initFileURLWithPath:dir] autorelease];
+            NSURL * url = [[NSURL alloc] initFileURLWithPath:dir];
             [openPanel setDirectoryURL:url];
         }
         result = [openPanel runModal];
@@ -141,13 +141,13 @@
 
 - (BOOL)isExtensionAllowed:(NSString *)filename {
     BOOL extensionAllowed = YES;
-    if (extensions != nil && [extensions count]) {
+    if (extensions && [extensions count]) {
         NSString* extension = [filename pathExtension];
         extensionAllowed = [extensions containsObject:extension];
     }
     if ([options hasOpt:@"allowed-files"]) {
         NSArray *allowedFiles = [options optValues:@"allowed-files"];
-        if (allowedFiles != nil && [allowedFiles count]) {
+        if (allowedFiles && [allowedFiles count]) {
             if ([allowedFiles containsObject:[filename lastPathComponent]]) {
                 return YES;
             }

@@ -55,19 +55,19 @@
 
 	// set starting file (to be used later with 
 	// runModal...) - doesn't work.
-	if ([options optValue:@"with-file"] != nil) {
+	if ([options optValue:@"with-file"]) {
 		file = [options optValue:@"with-file"];
 	}
 	// set starting directory (to be used later with runModal...)
-	if ([options optValue:@"with-directory"] != nil) {
+	if ([options optValue:@"with-directory"]) {
 		dir = [options optValue:@"with-directory"];
 	}
     
     // Only check for dir or file path existance if debug is enabled.
     if ([options hasOpt:@"debug"]) {
-        NSFileManager *fm = [[[NSFileManager alloc] init] autorelease];
+        NSFileManager *fm = [[NSFileManager alloc] init];
         // Directory
-        if (dir != nil && ![fm fileExistsAtPath:dir]) {
+        if (dir && ![fm fileExistsAtPath:dir]) {
             [self debug:[NSString stringWithFormat:@"Option --with-directory specifies a directory that does not exist: %@", dir]];
         }
     }
@@ -86,8 +86,8 @@
 	
     NSInteger result;
     
-        if (dir != nil) {
-            NSURL * url = [[[NSURL alloc] initFileURLWithPath:dir] autorelease];
+        if (dir) {
+            NSURL * url = [[NSURL alloc] initFileURLWithPath:dir];
             [savePanel setDirectoryURL:url];
         }
         [savePanel setNameFieldStringValue:file];

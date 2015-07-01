@@ -13,15 +13,10 @@
 - (instancetype)initWithOptions:(CDOptions *)opts {
 	self = [super initWithOptions:opts];
     activeNotifications = 0;
-    notifications = [[[NSMutableArray alloc] init] retain];
+    notifications = [[NSMutableArray alloc] init];
 	return self;
 }
 
-- (void) dealloc
-{
-    [notifications release];
-	[super dealloc];
-}
 
 // This must be overridden if you want local global options for your control
 - (NSDictionary *) globalAvailableKeys {
@@ -93,20 +88,20 @@
     notification[@"description"] = description;
     notification[@"icon"] = _icon;
     NSData *iconData = [NSData dataWithData:[_icon TIFFRepresentation]];
-    if (iconData == nil) {
+    if (!iconData) {
         iconData = [NSData data];
     }
     notification[@"iconData"] = iconData;
-    if (priority == nil) {
+    if (!priority) {
         priority = @0;
     }
     notification[@"priority"] = priority;
     notification[@"sticky"] = @(sticky);
-    if (clickPath == nil) {
+    if (!clickPath) {
         clickPath = @"";
     }
     notification[@"clickPath"] = clickPath;
-    if (clickArg == nil) {
+    if (!clickArg) {
         clickArg = @"";
     }
     notification[@"clickArg"] = clickArg;
@@ -125,7 +120,7 @@
 		NSString *iconName;
 		while ((iconName = (NSString *)[en nextObject])) {
             NSImage * _icon = [icon iconFromName:iconName];
-			if (_icon == nil) {
+			if (!_icon) {
 				_icon = [NSApp applicationIconImage];
 			}
 			[icons addObject:_icon];
@@ -139,7 +134,7 @@
 		NSString *fileName;
 		while ((fileName = (NSString *)[en nextObject])) {
             NSImage * _icon = [icon iconFromFile:fileName];
-			if (_icon == nil) {
+			if (!_icon) {
 				_icon = [NSApp applicationIconImage];
 			}
 			[icons addObject:_icon];
@@ -167,12 +162,12 @@
     // Check to ensure the file exists before launching the command
     if (![path isEqualToString:@""] && [[NSFileManager defaultManager] fileExistsAtPath:path]) {
         [args insertObject:path atIndex:0];
-#if defined __ppc__ || defined __i368__
+#if defined __i368__
         [args insertObject:@"-32" atIndex:0];
-#elif defined __ppc64__ || defined __x86_64__
+#elif defined __x86_64__
         [args insertObject:@"-64" atIndex:0];
 #endif
-        NSTask *task = [[[NSTask alloc] init] autorelease];
+        NSTask *task = [[NSTask alloc] init];
         // Output must be silenced to not hang this process
         [task setStandardError:[NSPipe pipe]];
         [task setStandardOutput:[NSPipe pipe]];
@@ -198,7 +193,7 @@
             inQuote = !inQuote;
             continue;
         }
-        if (![arg isEqualToString:@""] || arg != nil) {
+        if (![arg isEqualToString:@""] || arg) {
             if (inQuote) {
                 [spacedArray addObject:arg];
             }
